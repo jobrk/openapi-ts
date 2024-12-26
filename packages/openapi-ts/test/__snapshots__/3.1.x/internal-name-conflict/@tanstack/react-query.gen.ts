@@ -9,11 +9,12 @@ type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
         _id: string;
         _infinite?: boolean;
+        _rawPath: string;
     }
 ];
 
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): QueryKey<TOptions>[0] => {
-    const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];
+const createQueryKey = <TOptions extends Options>(id: string, path: string, options?: TOptions, infinite?: boolean): QueryKey<TOptions>[0] => {
+    const params: QueryKey<TOptions>[0] = { _id: id, _rawPath: path, baseUrl: (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];
     if (infinite) {
         params._infinite = infinite;
     }
@@ -33,7 +34,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 };
 
 export const createQueryKey2 = (options?: Options<CreateData>) => [
-    createQueryKey('create', options)
+    createQueryKey('create', '/foo', options)
 ];
 
 export const createOptions = (options?: Options<CreateData>) => {

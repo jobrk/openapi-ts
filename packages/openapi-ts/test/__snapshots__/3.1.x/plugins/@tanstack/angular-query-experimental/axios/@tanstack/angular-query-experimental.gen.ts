@@ -10,11 +10,12 @@ type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseURL' | 'body' | 'headers' | 'path' | 'query'> & {
         _id: string;
         _infinite?: boolean;
+        _rawPath: string;
     }
 ];
 
-const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions, infinite?: boolean): QueryKey<TOptions>[0] => {
-    const params: QueryKey<TOptions>[0] = { _id: id, baseURL: (options?.client ?? client).getConfig().baseURL } as QueryKey<TOptions>[0];
+const createQueryKey = <TOptions extends Options>(id: string, path: string, options?: TOptions, infinite?: boolean): QueryKey<TOptions>[0] => {
+    const params: QueryKey<TOptions>[0] = { _id: id, _rawPath: path, baseURL: (options?.client ?? client).getConfig().baseURL } as QueryKey<TOptions>[0];
     if (infinite) {
         params._infinite = infinite;
     }
@@ -34,7 +35,7 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 };
 
 export const exportQueryKey = (options?: Options<ExportData>) => [
-    createQueryKey('export', options)
+    createQueryKey('export', '/api/v{api-version}/no-tag', options)
 ];
 
 export const exportOptions = (options?: Options<ExportData>) => {
@@ -53,7 +54,7 @@ export const exportOptions = (options?: Options<ExportData>) => {
 };
 
 export const importQueryKey = (options: Options<ImportData>) => [
-    createQueryKey('import', options)
+    createQueryKey('import', '/api/v{api-version}/no-tag', options)
 ];
 
 export const importOptions = (options: Options<ImportData>) => {
@@ -86,7 +87,7 @@ export const importMutation = (options?: Partial<Options<ImportData>>) => {
 };
 
 export const apiVVersionODataControllerCountQueryKey = (options?: Options<ApiVVersionODataControllerCountData>) => [
-    createQueryKey('apiVVersionODataControllerCount', options)
+    createQueryKey('apiVVersionODataControllerCount', '/api/v{api-version}/simple/$count', options)
 ];
 
 export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVersionODataControllerCountData>) => {
@@ -105,7 +106,7 @@ export const apiVVersionODataControllerCountOptions = (options?: Options<ApiVVer
 };
 
 export const getApiVbyApiVersionSimpleOperationQueryKey = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => [
-    createQueryKey('getApiVbyApiVersionSimpleOperation', options)
+    createQueryKey('getApiVbyApiVersionSimpleOperation', '/api/v{api-version}/simple:operation', options)
 ];
 
 export const getApiVbyApiVersionSimpleOperationOptions = (options: Options<GetApiVbyApiVersionSimpleOperationData>) => {
@@ -138,7 +139,7 @@ export const deleteCallWithoutParametersAndResponseMutation = (options?: Partial
 };
 
 export const getCallWithoutParametersAndResponseQueryKey = (options?: Options<GetCallWithoutParametersAndResponseData>) => [
-    createQueryKey('getCallWithoutParametersAndResponse', options)
+    createQueryKey('getCallWithoutParametersAndResponse', '/api/v{api-version}/simple', options)
 ];
 
 export const getCallWithoutParametersAndResponseOptions = (options?: Options<GetCallWithoutParametersAndResponseData>) => {
@@ -171,7 +172,7 @@ export const patchCallWithoutParametersAndResponseMutation = (options?: Partial<
 };
 
 export const postCallWithoutParametersAndResponseQueryKey = (options?: Options<PostCallWithoutParametersAndResponseData>) => [
-    createQueryKey('postCallWithoutParametersAndResponse', options)
+    createQueryKey('postCallWithoutParametersAndResponse', '/api/v{api-version}/simple', options)
 ];
 
 export const postCallWithoutParametersAndResponseOptions = (options?: Options<PostCallWithoutParametersAndResponseData>) => {
@@ -232,7 +233,7 @@ export const deleteFooMutation = (options?: Partial<Options<DeleteFooData3>>) =>
 };
 
 export const callWithDescriptionsQueryKey = (options?: Options<CallWithDescriptionsData>) => [
-    createQueryKey('callWithDescriptions', options)
+    createQueryKey('callWithDescriptions', '/api/v{api-version}/descriptions', options)
 ];
 
 export const callWithDescriptionsOptions = (options?: Options<CallWithDescriptionsData>) => {
@@ -265,7 +266,7 @@ export const callWithDescriptionsMutation = (options?: Partial<Options<CallWithD
 };
 
 export const deprecatedCallQueryKey = (options: Options<DeprecatedCallData>) => [
-    createQueryKey('deprecatedCall', options)
+    createQueryKey('deprecatedCall', '/api/v{api-version}/parameters/deprecated', options)
 ];
 
 export const deprecatedCallOptions = (options: Options<DeprecatedCallData>) => {
@@ -298,7 +299,7 @@ export const deprecatedCallMutation = (options?: Partial<Options<DeprecatedCallD
 };
 
 export const callWithParametersQueryKey = (options: Options<CallWithParametersData>) => [
-    createQueryKey('callWithParameters', options)
+    createQueryKey('callWithParameters', '/api/v{api-version}/parameters/{parameterPath}', options)
 ];
 
 export const callWithParametersOptions = (options: Options<CallWithParametersData>) => {
@@ -346,7 +347,7 @@ const createInfiniteParams = <K extends Pick<QueryKey<Options>[0], 'body' | 'hea
 };
 
 export const callWithParametersInfiniteQueryKey = (options: Options<CallWithParametersData>): QueryKey<Options<CallWithParametersData>> => [
-    createQueryKey('callWithParameters', options, true)
+    createQueryKey('callWithParameters', '/api/v{api-version}/parameters/{parameterPath}', options, true)
 ];
 
 export const callWithParametersInfiniteOptions = (options: Options<CallWithParametersData>) => {
@@ -388,7 +389,7 @@ export const callWithParametersMutation = (options?: Partial<Options<CallWithPar
 };
 
 export const callWithWeirdParameterNamesQueryKey = (options: Options<CallWithWeirdParameterNamesData>) => [
-    createQueryKey('callWithWeirdParameterNames', options)
+    createQueryKey('callWithWeirdParameterNames', '/api/v{api-version}/parameters/{parameter.path.1}/{parameter-path-2}/{PARAMETER-PATH-3}', options)
 ];
 
 export const callWithWeirdParameterNamesOptions = (options: Options<CallWithWeirdParameterNamesData>) => {
@@ -421,7 +422,7 @@ export const callWithWeirdParameterNamesMutation = (options?: Partial<Options<Ca
 };
 
 export const getCallWithOptionalParamQueryKey = (options: Options<GetCallWithOptionalParamData>) => [
-    createQueryKey('getCallWithOptionalParam', options)
+    createQueryKey('getCallWithOptionalParam', '/api/v{api-version}/parameters', options)
 ];
 
 export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOptionalParamData>) => {
@@ -440,7 +441,7 @@ export const getCallWithOptionalParamOptions = (options: Options<GetCallWithOpti
 };
 
 export const getCallWithOptionalParamInfiniteQueryKey = (options: Options<GetCallWithOptionalParamData>): QueryKey<Options<GetCallWithOptionalParamData>> => [
-    createQueryKey('getCallWithOptionalParam', options, true)
+    createQueryKey('getCallWithOptionalParam', '/api/v{api-version}/parameters', options, true)
 ];
 
 export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCallWithOptionalParamData>) => {
@@ -468,7 +469,7 @@ export const getCallWithOptionalParamInfiniteOptions = (options: Options<GetCall
 };
 
 export const postCallWithOptionalParamQueryKey = (options: Options<PostCallWithOptionalParamData>) => [
-    createQueryKey('postCallWithOptionalParam', options)
+    createQueryKey('postCallWithOptionalParam', '/api/v{api-version}/parameters', options)
 ];
 
 export const postCallWithOptionalParamOptions = (options: Options<PostCallWithOptionalParamData>) => {
@@ -487,7 +488,7 @@ export const postCallWithOptionalParamOptions = (options: Options<PostCallWithOp
 };
 
 export const postCallWithOptionalParamInfiniteQueryKey = (options: Options<PostCallWithOptionalParamData>): QueryKey<Options<PostCallWithOptionalParamData>> => [
-    createQueryKey('postCallWithOptionalParam', options, true)
+    createQueryKey('postCallWithOptionalParam', '/api/v{api-version}/parameters', options, true)
 ];
 
 export const postCallWithOptionalParamInfiniteOptions = (options: Options<PostCallWithOptionalParamData>) => {
@@ -529,7 +530,7 @@ export const postCallWithOptionalParamMutation = (options?: Partial<Options<Post
 };
 
 export const postApiVbyApiVersionRequestBodyQueryKey = (options?: Options<PostApiVbyApiVersionRequestBodyData>) => [
-    createQueryKey('postApiVbyApiVersionRequestBody', options)
+    createQueryKey('postApiVbyApiVersionRequestBody', '/api/v{api-version}/requestBody', options)
 ];
 
 export const postApiVbyApiVersionRequestBodyOptions = (options?: Options<PostApiVbyApiVersionRequestBodyData>) => {
@@ -562,7 +563,7 @@ export const postApiVbyApiVersionRequestBodyMutation = (options?: Partial<Option
 };
 
 export const postApiVbyApiVersionFormDataQueryKey = (options?: Options<PostApiVbyApiVersionFormDataData>) => [
-    createQueryKey('postApiVbyApiVersionFormData', options)
+    createQueryKey('postApiVbyApiVersionFormData', '/api/v{api-version}/formData', options)
 ];
 
 export const postApiVbyApiVersionFormDataOptions = (options?: Options<PostApiVbyApiVersionFormDataData>) => {
@@ -595,7 +596,7 @@ export const postApiVbyApiVersionFormDataMutation = (options?: Partial<Options<P
 };
 
 export const callWithDefaultParametersQueryKey = (options?: Options<CallWithDefaultParametersData>) => [
-    createQueryKey('callWithDefaultParameters', options)
+    createQueryKey('callWithDefaultParameters', '/api/v{api-version}/defaults', options)
 ];
 
 export const callWithDefaultParametersOptions = (options?: Options<CallWithDefaultParametersData>) => {
@@ -614,7 +615,7 @@ export const callWithDefaultParametersOptions = (options?: Options<CallWithDefau
 };
 
 export const callWithDefaultOptionalParametersQueryKey = (options?: Options<CallWithDefaultOptionalParametersData>) => [
-    createQueryKey('callWithDefaultOptionalParameters', options)
+    createQueryKey('callWithDefaultOptionalParameters', '/api/v{api-version}/defaults', options)
 ];
 
 export const callWithDefaultOptionalParametersOptions = (options?: Options<CallWithDefaultOptionalParametersData>) => {
@@ -675,7 +676,7 @@ export const duplicateNameMutation = (options?: Partial<Options<DuplicateNameDat
 };
 
 export const duplicateName2QueryKey = (options?: Options<DuplicateName2Data>) => [
-    createQueryKey('duplicateName2', options)
+    createQueryKey('duplicateName2', '/api/v{api-version}/duplicate', options)
 ];
 
 export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => {
@@ -694,7 +695,7 @@ export const duplicateName2Options = (options?: Options<DuplicateName2Data>) => 
 };
 
 export const duplicateName3QueryKey = (options?: Options<DuplicateName3Data>) => [
-    createQueryKey('duplicateName3', options)
+    createQueryKey('duplicateName3', '/api/v{api-version}/duplicate', options)
 ];
 
 export const duplicateName3Options = (options?: Options<DuplicateName3Data>) => {
@@ -741,7 +742,7 @@ export const duplicateName4Mutation = (options?: Partial<Options<DuplicateName4D
 };
 
 export const callWithNoContentResponseQueryKey = (options?: Options<CallWithNoContentResponseData>) => [
-    createQueryKey('callWithNoContentResponse', options)
+    createQueryKey('callWithNoContentResponse', '/api/v{api-version}/no-content', options)
 ];
 
 export const callWithNoContentResponseOptions = (options?: Options<CallWithNoContentResponseData>) => {
@@ -760,7 +761,7 @@ export const callWithNoContentResponseOptions = (options?: Options<CallWithNoCon
 };
 
 export const callWithResponseAndNoContentResponseQueryKey = (options?: Options<CallWithResponseAndNoContentResponseData>) => [
-    createQueryKey('callWithResponseAndNoContentResponse', options)
+    createQueryKey('callWithResponseAndNoContentResponse', '/api/v{api-version}/multiple-tags/response-and-no-content', options)
 ];
 
 export const callWithResponseAndNoContentResponseOptions = (options?: Options<CallWithResponseAndNoContentResponseData>) => {
@@ -779,7 +780,7 @@ export const callWithResponseAndNoContentResponseOptions = (options?: Options<Ca
 };
 
 export const dummyAQueryKey = (options?: Options<DummyAData>) => [
-    createQueryKey('dummyA', options)
+    createQueryKey('dummyA', '/api/v{api-version}/multiple-tags/a', options)
 ];
 
 export const dummyAOptions = (options?: Options<DummyAData>) => {
@@ -798,7 +799,7 @@ export const dummyAOptions = (options?: Options<DummyAData>) => {
 };
 
 export const dummyBQueryKey = (options?: Options<DummyBData>) => [
-    createQueryKey('dummyB', options)
+    createQueryKey('dummyB', '/api/v{api-version}/multiple-tags/b', options)
 ];
 
 export const dummyBOptions = (options?: Options<DummyBData>) => {
@@ -817,7 +818,7 @@ export const dummyBOptions = (options?: Options<DummyBData>) => {
 };
 
 export const callWithResponseQueryKey = (options?: Options<CallWithResponseData>) => [
-    createQueryKey('callWithResponse', options)
+    createQueryKey('callWithResponse', '/api/v{api-version}/response', options)
 ];
 
 export const callWithResponseOptions = (options?: Options<CallWithResponseData>) => {
@@ -836,7 +837,7 @@ export const callWithResponseOptions = (options?: Options<CallWithResponseData>)
 };
 
 export const callWithDuplicateResponsesQueryKey = (options?: Options<CallWithDuplicateResponsesData>) => [
-    createQueryKey('callWithDuplicateResponses', options)
+    createQueryKey('callWithDuplicateResponses', '/api/v{api-version}/response', options)
 ];
 
 export const callWithDuplicateResponsesOptions = (options?: Options<CallWithDuplicateResponsesData>) => {
@@ -883,7 +884,7 @@ export const callWithResponsesMutation = (options?: Partial<Options<CallWithResp
 };
 
 export const collectionFormatQueryKey = (options: Options<CollectionFormatData>) => [
-    createQueryKey('collectionFormat', options)
+    createQueryKey('collectionFormat', '/api/v{api-version}/collectionFormat', options)
 ];
 
 export const collectionFormatOptions = (options: Options<CollectionFormatData>) => {
@@ -902,7 +903,7 @@ export const collectionFormatOptions = (options: Options<CollectionFormatData>) 
 };
 
 export const typesQueryKey = (options: Options<TypesData>) => [
-    createQueryKey('types', options)
+    createQueryKey('types', '/api/v{api-version}/types', options)
 ];
 
 export const typesOptions = (options: Options<TypesData>) => {
@@ -921,7 +922,7 @@ export const typesOptions = (options: Options<TypesData>) => {
 };
 
 export const uploadFileQueryKey = (options: Options<UploadFileData>) => [
-    createQueryKey('uploadFile', options)
+    createQueryKey('uploadFile', '/api/v{api-version}/upload', options)
 ];
 
 export const uploadFileOptions = (options: Options<UploadFileData>) => {
@@ -954,7 +955,7 @@ export const uploadFileMutation = (options?: Partial<Options<UploadFileData>>) =
 };
 
 export const fileResponseQueryKey = (options: Options<FileResponseData>) => [
-    createQueryKey('fileResponse', options)
+    createQueryKey('fileResponse', '/api/v{api-version}/file/{id}', options)
 ];
 
 export const fileResponseOptions = (options: Options<FileResponseData>) => {
@@ -973,7 +974,7 @@ export const fileResponseOptions = (options: Options<FileResponseData>) => {
 };
 
 export const complexTypesQueryKey = (options: Options<ComplexTypesData>) => [
-    createQueryKey('complexTypes', options)
+    createQueryKey('complexTypes', '/api/v{api-version}/complex', options)
 ];
 
 export const complexTypesOptions = (options: Options<ComplexTypesData>) => {
@@ -992,7 +993,7 @@ export const complexTypesOptions = (options: Options<ComplexTypesData>) => {
 };
 
 export const multipartResponseQueryKey = (options?: Options<MultipartResponseData>) => [
-    createQueryKey('multipartResponse', options)
+    createQueryKey('multipartResponse', '/api/v{api-version}/multipart', options)
 ];
 
 export const multipartResponseOptions = (options?: Options<MultipartResponseData>) => {
@@ -1011,7 +1012,7 @@ export const multipartResponseOptions = (options?: Options<MultipartResponseData
 };
 
 export const multipartRequestQueryKey = (options?: Options<MultipartRequestData>) => [
-    createQueryKey('multipartRequest', options)
+    createQueryKey('multipartRequest', '/api/v{api-version}/multipart', options)
 ];
 
 export const multipartRequestOptions = (options?: Options<MultipartRequestData>) => {
@@ -1058,7 +1059,7 @@ export const complexParamsMutation = (options?: Partial<Options<ComplexParamsDat
 };
 
 export const callWithResultFromHeaderQueryKey = (options?: Options<CallWithResultFromHeaderData>) => [
-    createQueryKey('callWithResultFromHeader', options)
+    createQueryKey('callWithResultFromHeader', '/api/v{api-version}/header', options)
 ];
 
 export const callWithResultFromHeaderOptions = (options?: Options<CallWithResultFromHeaderData>) => {
@@ -1091,7 +1092,7 @@ export const callWithResultFromHeaderMutation = (options?: Partial<Options<CallW
 };
 
 export const testErrorCodeQueryKey = (options: Options<TestErrorCodeData>) => [
-    createQueryKey('testErrorCode', options)
+    createQueryKey('testErrorCode', '/api/v{api-version}/error', options)
 ];
 
 export const testErrorCodeOptions = (options: Options<TestErrorCodeData>) => {
@@ -1124,7 +1125,7 @@ export const testErrorCodeMutation = (options?: Partial<Options<TestErrorCodeDat
 };
 
 export const nonAsciiæøåÆøÅöôêÊ字符串QueryKey = (options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>) => [
-    createQueryKey('nonAsciiæøåÆøÅöôêÊ字符串', options)
+    createQueryKey('nonAsciiæøåÆøÅöôêÊ字符串', '/api/v{api-version}/non-ascii-æøåÆØÅöôêÊ字符串', options)
 ];
 
 export const nonAsciiæøåÆøÅöôêÊ字符串Options = (options: Options<NonAsciiæøåÆøÅöôêÊ字符串Data>) => {

@@ -326,6 +326,10 @@ const createQueryKeyFunction = ({
           type: compiler.typeReferenceNode({ typeName: 'string' }),
         },
         {
+          name: 'path',
+          type: compiler.typeReferenceNode({ typeName: 'string' }),
+        },
+        {
           isRequired: false,
           name: 'options',
           type: compiler.typeReferenceNode({ typeName: TOptionsType }),
@@ -346,6 +350,10 @@ const createQueryKeyFunction = ({
               {
                 key: '_id',
                 value: compiler.identifier({ text: 'id' }),
+              },
+              {
+                key: '_rawPath',
+                value: compiler.identifier({ text: 'path' }),
               },
               {
                 key: getClientBaseUrlKey(),
@@ -509,6 +517,12 @@ const createQueryKeyType = ({
         keyword: 'boolean',
       }),
     },
+    {
+      name: '_rawPath',
+      type: compiler.keywordTypeNode({
+        keyword: 'string',
+      }),
+    },
   ];
 
   const queryKeyType = compiler.typeAliasDeclaration({
@@ -546,11 +560,13 @@ const createQueryKeyLiteral = ({
   context,
   id,
   isInfinite,
+  path,
   plugin,
 }: {
   context: IR.Context;
   id: string;
   isInfinite?: boolean;
+  path: string;
   plugin: PluginInstance;
 }) => {
   const file = context.file({ id: plugin.name })!;
@@ -564,6 +580,7 @@ const createQueryKeyLiteral = ({
         functionName: identifierCreateQueryKey.name || '',
         parameters: [
           compiler.ots.string(id),
+          compiler.ots.string(path),
           'options',
           isInfinite ? compiler.ots.boolean(true) : undefined,
         ],
@@ -718,6 +735,7 @@ const queryKeyStatement = ({
         context,
         id: operation.id,
         isInfinite,
+        path: operation.path,
         plugin,
       }),
     }),
